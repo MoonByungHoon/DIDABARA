@@ -6,6 +6,7 @@ import CreateModal from "../components/CreateModal";
 import ShowMyList from "../components/ShowMyList";
 import DnDropContext from "../components/DnDropContext";
 import InviteInput from "../components/InviteInput";
+import DocumentList from "../components/DocumentList";
 
 const Item = styled(Grid)`
   /* border: 1px solid black; */
@@ -135,6 +136,7 @@ function DashBoard() {
         {makeCategory && <CreateModal setShowing={setMakeCategory} />}
         {invite && <InviteInput setInvite={setInvite} />}
         <Outlet />
+        {/* <DocumentList /> */}
       </SecondGrid>
     </Container>
   );

@@ -15,7 +15,6 @@ import CreateItem from "./CreateItem";
 import FolderCopyOutlinedIcon from "@mui/icons-material/FolderCopyOutlined";
 import ItemMenu from "./ItemMenu";
 import { useQuery } from "react-query";
-import Viewer from "./Viewer";
 import ViewContainer from "./ViewContainer";
 
 const Container = styled.div`
@@ -52,12 +51,16 @@ const PDF = styled.div`
     cursor: pointer;
   }
   div span {
+    /* display: block; */
     width: 60%;
-    height: 1rem;
+    height: 3rem;
     color: #2f3640;
     align-self: center;
     cursor: pointer;
-    overflow: hidden;
+
+    overflow: hidden; // 을 사용해 영역을 감출 것
+    text-overflow: ellipsis; // 로 ... 을 만들기
+    /* white-space: nowrap; //아랫줄 내려가기 막음 */
   }
 `;
 const MenuBar = styled.div`
