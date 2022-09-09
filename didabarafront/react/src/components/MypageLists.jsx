@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useState } from "react";
-import { useMatch, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const list = [
   {
@@ -26,22 +26,22 @@ const list = [
   {
     primaryText: "내가 만든",
     icon: "description",
-    url: "/mypage/personal-info1",
+    url: "/mypage/unnamed01",
   },
   {
     primaryText: "내가 본",
     icon: "task",
-    url: "/mypage/personal-info2",
+    url: "/mypage/unnamed02",
   },
   {
     primaryText: "참여 목록",
     icon: "folder",
-    url: "/mypage/personal-info3",
+    url: "/mypage/unnamed03",
   },
   {
     primaryText: "즐겨찾기",
     icon: "star",
-    url: "/mypage/personal-info4",
+    url: "/mypage/starred",
   },
 ];
 

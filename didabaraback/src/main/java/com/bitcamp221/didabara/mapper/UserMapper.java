@@ -26,9 +26,11 @@ public interface UserMapper {
 
     @Select("SELECT username,emailconfig.auth_code FROM USER JOIN emailconfig ON USER.ID =emailconfig.ID" +
             "WHERE USER.USERNAME=#{username}")
-    String findByUserName(@Param("username")String username);
+    String findByUserName(@Param("username") String username);
 
+  @Select("SELECT id FROM user ORDER BY id DESC LIMIT 1")
+  Long lastOneIndex();
 
-    @Select("SELECT id FROM user ORDER BY id DESC LIMIT 1")
-    Long lastOneIndex();
+  @Select("SELECT username FROM user WHERE phone_number=#{ph}")
+  String findUserPhoneNumber(@Param("ph") String phoneNum);
 }

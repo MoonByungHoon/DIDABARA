@@ -1,13 +1,11 @@
 package com.bitcamp221.didabara.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Builder
+@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,7 +19,7 @@ public class UserEntity extends BaseTimeEntity {
   private Long id;
 
   @Column(name = "username", nullable = false, unique = true)
-  private String  username;
+  private String username;
 
   @Column(name = "password", nullable = false, length = 256)
   private String password;
@@ -29,14 +27,17 @@ public class UserEntity extends BaseTimeEntity {
   @Column(name = "nickname", nullable = false, length = 30, unique = true)
   private String nickname;
 
-  @Column(name = "token", length = 500)
+  @Column(name = "phone_number", length = 255)
+  private String phoneNumber;
 
-  public void changePassword(String password){
-    this.password = password;
+  @Column(name = "real_name", length = 255)
+  private String realName;
+
+  public void changePassword(String password) {
+      this.password = password;
   }
 
-  public  void changeNickname(String nickname){
-    this.nickname=nickname;
+  public void changeNickname(String nickname) {
+      this.nickname = nickname;
   }
-
 }
