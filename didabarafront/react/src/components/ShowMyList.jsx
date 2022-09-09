@@ -32,7 +32,7 @@ function ShowMyList() {
     retry: 0,
     onSuccess: (data) => {
       console.log("myDocumentList is....:", data);
-      setList(data.data.resList);
+      setList(data.data);
     },
   });
 

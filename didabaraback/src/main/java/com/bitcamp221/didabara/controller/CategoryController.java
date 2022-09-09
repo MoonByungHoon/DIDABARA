@@ -38,7 +38,7 @@ public class CategoryController {
 
     try {
       log.info(LogMessage.infoJoin(message));
-
+      log.info("아이디 : " + userId);
       if (userId != null) {
 
 //    String 타입인 host를 롱 타입으로 변환
@@ -103,6 +103,8 @@ public class CategoryController {
                                   @RequestPart(value = "categoryDTO", required = false) final CategoryDTO categoryDTO,
                                   @RequestPart(value = "file", required = false) final MultipartFile file) {
     final String message = "category create";
+    log.info(String.valueOf(file));
+    log.info(String.valueOf(categoryDTO));
 
     try {
       log.info(LogMessage.infoJoin(message));
