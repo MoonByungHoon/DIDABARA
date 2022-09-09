@@ -150,13 +150,6 @@ function EmailAuth() {
 
           <form onSubmit={codeSubmit}>
             <Grid container spacing={2}>
-              {/* <TextField
-              disabled
-              value={params.username}
-              name="params.username"
-              label="Email"
-              style={{ width: "100%" }}
-            /> */}
               <Grid item xs={12} />
               <Grid item xs={12}>
                 <StyledTextField

@@ -176,6 +176,11 @@ function LoginInput() {
           </Grid>
         </StyledGrid>
         <StyledGrid>
+          <Typography onClick={openFindInfo} style={{ cursor: "pointer" }}>
+            아이디 또는 비밀번호 찾기
+          </Typography>
+        </StyledGrid>
+        <StyledGrid>
           <Typography variant="body2" color="textSecondary" align="center">
             Copyright ©{" "}
             <i className="fa-brands fa-github" style={{ fontSize: "2rem" }}></i>

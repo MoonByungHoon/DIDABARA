@@ -43,6 +43,7 @@ function Router() {
             <Route path="/kakaologin" element={<KakaoLogin />} />
             <Route path="/join" element={<Join />} />
             <Route path="/emailconfig/:username" element={<EmailAuth />} />
+            <Route path="/find-info" element={<FindInfo />} />
             {/* </>
         )}
         {user && (
@@ -54,8 +55,9 @@ function Router() {
 
             <Route path="/mypage" element={<Mypage />}>
               <Route path="main" element={<MypageMain />} />
-              <Route path=":personal-info" element={<PersonalInfo />} />
+              <Route path="personal-info" element={<PersonalInfo />} />
               <Route path="updateimage" element={<AvatarPickerModal />} />
+              <Route path="unnamed03" element={<SubscriptionMain />} />
             </Route>
             {/* </>
         )} */}

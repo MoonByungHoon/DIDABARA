@@ -17,7 +17,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { loginState } from "../config/Atom";
 import styled from "styled-components";
@@ -79,6 +79,9 @@ const Join = () => {
     confirmPassword: Yup.string()
       .required("비밀번호를 확인해 주세요.")
       .oneOf([Yup.ref("password"), null], "비밀번호가 일치하지 않습니다."),
+    phoneNumber: Yup.string()
+      .required("핸드폰번호를 입력해 주세요.")
+      .matches(/^\d{3}\d{3,4}\d{4}$/, "정확한 번호를 입력해 주세요."),
     nickname: Yup.string()
       .required("닉네임을 입력해 주세요.")
       .matches(
@@ -103,9 +106,11 @@ const Join = () => {
   const onSubmit = (data) => {
     const username = data.username;
     const password = data.password;
+    const realName = data.realName;
+    const phoneNumber = data.phoneNumber;
     const nickname = data.nickname;
 
-    join({ username, password, nickname });
+    join({ username, password, realName, phoneNumber, nickname });
   };
 
   function join(userDTO) {
@@ -174,7 +179,8 @@ const Join = () => {
               style={{ width: "100%" }}
               {...register("password")}
               error={errors.password ? true : false}
-              helperText={errors.password?.message}
+              //   helperText={errors.password?.message}
+              helperText="비밀번호는 8~40자 사이로 영문, 숫자, 특수문자를 포함해야 합니다."
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -201,6 +207,28 @@ const Join = () => {
               {...register("confirmPassword")}
               error={errors.confirmPassword ? true : false}
               helperText={errors.confirmPassword?.message}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <StyledTextField
+              id="realName"
+              name="realName"
+              label="이름"
+              style={{ width: "100%" }}
+              {...register("realName")}
+              error={errors.realName ? true : false}
+              helperText={errors.realName?.message}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <StyledTextField
+              id="phoneNumber"
+              name="phoneNumber"
+              label="전화번호"
+              style={{ width: "100%" }}
+              {...register("phoneNumber")}
+              error={errors.phoneNumber ? true : false}
+              helperText={errors.phoneNumber?.message}
             />
           </Grid>
           <Grid item xs={12}>

@@ -199,10 +199,10 @@ export const AvatarPickerModal = (props) => {
               <Button>삭제하기</Button>
             </Grid>
           </Grid>
-          {/* <Grid container>
+          <Grid container>
             <Typography variant="h5">기본 이미지에서 선택하기</Typography>
             <ProfileImages />
-          </Grid> */}
+          </Grid>
           <Grid item>
             <Button type="submit">등록하기</Button>
           </Grid>
