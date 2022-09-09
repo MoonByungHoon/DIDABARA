@@ -9,7 +9,7 @@ function Mypage() {
     <Grid container>
       <Grid
         component="nav"
-        style={{ backgroundColor: "#F5F5F5", height: "100vh", width: "15%" }}
+        style={{ backgroundColor: "#f5f5f5", height: "100vh", width: "15%" }}
       >
         <MypageNavHeader />
         <MypageLists />

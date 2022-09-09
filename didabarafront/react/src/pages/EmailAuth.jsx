@@ -150,13 +150,6 @@ function EmailAuth() {
 
           <form onSubmit={codeSubmit}>
             <Grid container spacing={2}>
-              {/* <TextField
-              disabled
-              value={params.username}
-              name="params.username"
-              label="Email"
-              style={{ width: "100%" }}
-            /> */}
               <Grid item xs={12} />
               <Grid item xs={12}>
                 <StyledTextField
@@ -179,7 +172,7 @@ function EmailAuth() {
                 <AlertTitle>
                   인증번호가 올바르지 않습니다. 다시 확인해 주세요.
                 </AlertTitle>
-                인증번호를 받지 못하셨나요?{" "}
+                인증번호를 받지 못하셨나요?
                 <span
                   onClick={resendAuthcode}
                   style={{
@@ -200,4 +193,3 @@ function EmailAuth() {
 }
 
 export default EmailAuth;
-
