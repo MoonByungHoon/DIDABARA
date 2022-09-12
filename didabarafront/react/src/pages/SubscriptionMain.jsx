@@ -1,4 +1,12 @@
-import { Container, Divider, Grid, Paper, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Container,
+  Divider,
+  Grid,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
@@ -36,7 +44,9 @@ function SubscriptionList() {
                 </TabList>
               </Box>
               <TabPanel value="1">Item One</TabPanel>
-              <TabPanel value="2"><MyCategoryList /></TabPanel>
+              <TabPanel value="2">
+                <MyCategoryList />
+              </TabPanel>
             </TabContext>
           </Box>
         </Paper>

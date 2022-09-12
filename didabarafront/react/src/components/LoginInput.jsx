@@ -112,6 +112,10 @@ function LoginInput() {
       });
   };
 
+  const openFindInfo = () => {
+    navi("/find-info");
+  };
+
   return (
     <StyledContainer container>
       <StyledForm onSubmit={handleSubmit(sendLoginRequest)}>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Grid } from "@mui/material";
 import styled from "styled-components";
-import { Outlet } from "react-router-dom";
 import CreateModal from "../components/CreateModal";
 import ShowMyList from "../components/ShowMyList";
 import DnDropContext from "../components/DnDropContext";
@@ -10,7 +9,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
 import Viewer from "../components/Viewer";
 import ReplyInput from "../components/ReplyInput";
-import ChatInput from "../components/ChatInput";
 
 const Item = styled(Grid)`
   /* border: 1px solid black; */

@@ -18,6 +18,9 @@ import AvatarPickerModal from "./components/AvatarPickerModal";
 import { useQuery } from "react-query";
 import { getUserData } from "./config/APIs";
 import DocumentList from "./components/DocumentList";
+import FindInfo from "./pages/FindInfo";
+import SubscriptionMain from "./pages/SubscriptionMain";
+import DeleteAccount from "./pages/DeleteAccount";
 
 function Router() {
   const isLogin = useRecoilValue(loginState);
@@ -62,6 +65,7 @@ function Router() {
             {/* </>
         )} */}
             <Route path="/" element={<Home />} />
+            <Route path="/deleted" element={<DeleteAccount />} />
           </Routes>
         </>
       )}

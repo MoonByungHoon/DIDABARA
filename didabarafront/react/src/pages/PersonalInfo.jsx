@@ -14,11 +14,13 @@ import {
   MenuItem,
   IconButton,
   Tooltip,
+  Input,
+  Alert,
 } from "@mui/material";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import { userState } from "../config/Atom";
 import styled from "styled-components";
 import AvatarPicker from "../components/AvatarPicker";
@@ -26,6 +28,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { Box } from "@mui/system";
 import axios from "axios";
 import { REQUEST_ADDRESS } from "../config/APIs";
+import { useNavigate } from "react-router-dom";
+import DeleteAccount from "./DeleteAccount";
 
 /** 스타일 컴포넌트 */
 const StyledButton = styled(Button)`
@@ -126,6 +130,8 @@ function PersonalInfo() {
   } = useForm({ resolver: yupResolver(validationPwd) });
 
   const [user, setUser] = useRecoilState(userState);
+  const userLogout = useResetRecoilState(userState);
+  const navi = useNavigate();
   let date = user.modified_date + "";
   let dateResult = date.slice(0, 10);
 
@@ -180,6 +186,31 @@ function PersonalInfo() {
         }
       )
       .then((res) => setUser({ ...user, ...res.data }))
+      .catch((err) => console.log(err));
+  };
+
+  /**
+   * 탈퇴
+   */
+  const [deleteAlert, setDeleteAlert] = useState(false);
+
+  const deleteConfirm = (e) => {
+    setDeleteAlert(true);
+  };
+
+  const deleteAccount = (e) => {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const password = data.get("password");
+
+    axios
+      .delete(REQUEST_ADDRESS + "auth/user", {
+        data: { password },
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then(userLogout(), navi("/deleted"))
       .catch((err) => console.log(err));
   };
 
@@ -353,6 +384,26 @@ function PersonalInfo() {
             </StyledGrid2>
           </StyledGrid>
         </StyledPaper>
+        <Paper elevation={3}>
+          <Typography style={{fontFamily: "Share Tech Mono"}}>Delete Account</Typography>
+          <Typography>탈퇴시 모든 카테고리와 문서가 지워집니다.</Typography>
+          <form onSubmit={deleteAccount}>
+            <Input name="password">비밀번호를 입력해주세요</Input>
+            <Input style={{ display: "none" }} />
+            <Button onClick={deleteConfirm}>확인</Button>
+            {deleteAlert && (
+              <Alert
+                action={
+                  <Button type="submit" color="inherit" size="small">
+                    탈퇴하기
+                  </Button>
+                }
+              >
+                정말 삭제하시겠습니까?
+              </Alert>
+            )}
+          </form>
+        </Paper>
       </Container>
     </>
   );

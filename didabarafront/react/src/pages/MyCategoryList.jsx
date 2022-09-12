@@ -11,6 +11,7 @@ function MyCategoryList() {
 
   return (
     <div>
+      <Typography>{user.name}</Typography>
       <List>
         {category.map((list) => (
           <ListItem
@@ -19,9 +20,7 @@ function MyCategoryList() {
             content={list.content}
             imgSrc={list.profileImageUrl}
             id={list.id}
-          >
-            <Typography>{list.title}</Typography>
-          </ListItem>
+          ></ListItem>
         ))}
       </List>
     </div>
