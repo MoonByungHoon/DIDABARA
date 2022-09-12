@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { REQUEST_ADDRESS } from "../config/APIs";
-import { useSetRecoilState } from "recoil";
-import { categoryItem } from "../config/Atom";
+import { useRecoilState } from "recoil";
+import { didabaraItemState } from "../config/Atom";
 
 const OutLineBox = styled.div`
   border-radius: 10px;
@@ -24,8 +24,8 @@ const Item = styled.li`
   }
 `;
 
-function ItemMenu({ id }) {
-  const setCategoryItem = useSetRecoilState(categoryItem);
+function ItemMenu({ id, category }) {
+  const [didabaraItems, setDidabaraItems] = useRecoilState(didabaraItemState);
   const itemDrop = () => {
     const select = window.confirm("삭제하시겠습니까?");
 
@@ -37,8 +37,10 @@ function ItemMenu({ id }) {
           },
         })
         .then((res) => {
-          setCategoryItem(res.data.resList);
-          console.log(res);
+          setDidabaraItems((prev) => {
+            const before = prev.filter((item) => item.category !== category);
+            return [...before, ...res.data.resList];
+          });
         });
     }
   };

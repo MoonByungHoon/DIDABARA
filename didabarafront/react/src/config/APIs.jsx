@@ -35,10 +35,32 @@ export const getDidabara = () => {
   });
 };
 
-export const getjoinedList = () => {
-  console.log("getting my Join List...");
-
+export const getDidabaraJoin = () => {
   return axios.get(REQUEST_ADDRESS + "subscriber/myJoinList", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+};
+
+export const getDidabaraItems = () => {
+  return axios.get(REQUEST_ADDRESS + "categoryItem/myitemlist", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+};
+
+export const getDidabaraJoinItems = () => {
+  return axios.get(REQUEST_ADDRESS + "categoryItem/allitemlist", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+};
+
+export const getItemReply = (id) => {
+  return axios.get(REQUEST_ADDRESS + `categoryItemReply/list/${id}`, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },

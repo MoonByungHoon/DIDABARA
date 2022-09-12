@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import {
   categoryItem,
+  didabaraState,
   loginState,
-  myDocumentState,
   userState,
 } from "../config/Atom";
 import styled from "styled-components";
@@ -44,7 +44,7 @@ function NavigationBar() {
    * user 의 defautl 값인 id:null 이 된다.
    */
   const userLogout = useResetRecoilState(userState);
-  const resetDocument = useResetRecoilState(myDocumentState);
+  const resetDocument = useResetRecoilState(didabaraState);
   const resetItemList = useResetRecoilState(categoryItem);
 
   /** 이벤트에 따라 유저의 상태를 관리하기 위한 Recoil */

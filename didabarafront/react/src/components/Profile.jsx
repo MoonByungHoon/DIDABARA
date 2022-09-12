@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { Paper, Avatar } from "@mui/material";
-import { useRecoilValue } from "recoil";
-import { userState } from "../config/Atom";
 import axios from "axios";
 import { REQUEST_ADDRESS } from "../config/APIs";
+import { myListOrJoinList } from "../config/Atom";
+import { useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 
 const StyledPaper = styled(Paper)`
   && {
@@ -58,6 +59,15 @@ const H5 = styled.h5`
 `;
 
 function Profile({ img, username, title, text, id }) {
+  const navi = useNavigate();
+  const setList = useSetRecoilState(myListOrJoinList);
+
+  const goCategory = () => {
+    console.log("getting my item list of categories...");
+    setList(id);
+    navi(`/dashboard/${id}`);
+  };
+
   const getPaper = () => {
     axios
       .get(REQUEST_ADDRESS + `categoryItem/list/` + id, {
@@ -67,8 +77,9 @@ function Profile({ img, username, title, text, id }) {
       })
       .then((res) => console.log(res.data));
   };
+
   return (
-    <StyledPaper onClick={getPaper}>
+    <StyledPaper onClick={goCategory}>
       <Wrapper>
         <ImgBlock>
           <Img alt="Background Image" src={img} />

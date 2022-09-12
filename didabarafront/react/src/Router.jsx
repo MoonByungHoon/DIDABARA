@@ -54,10 +54,7 @@ function Router() {
             <Route path="/dashboard" element={<DashBoard />}>
               <Route path="/dashboard/:document" element={<DocumentList />} />
             </Route>
-            <Route
-              path="/dashboard/:document/:docsId"
-              element={<ViewContainer />}
-            />
+            <Route path="/dashboard/pages/:docId" element={<ViewContainer />} />
             <Route path="/dashboard/create" element={<CreateModal />} />
 
             <Route path="/mypage" element={<Mypage />}>

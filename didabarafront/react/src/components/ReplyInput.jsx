@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Send } from "@mui/icons-material";
+import { REQUEST_ADDRESS } from "../config/APIs";
 
 const StyledButton = styled(Button)`
   && {
@@ -34,20 +35,22 @@ const StyledText = styled(TextField)({
   },
 });
 
-function ReplyInput() {
+function ReplyInput({ item }) {
   const replyRequest = (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
 
-    for (let item of data.entries()) {
-      console.log(item);
-    }
-
-    // axios.post("리플라이주소", data, {
-    //   headers: {
-    //     Authorization: "bearer " + localStorage.getItem("token"),
-    //   },
-    // });
+    axios
+      .post(
+        REQUEST_ADDRESS + `categoryItemReply/create/page/${item}`,
+        { content: data.get("content") },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => console.log(res));
   };
 
   return (
@@ -58,7 +61,7 @@ function ReplyInput() {
             fullWidth
             multiline
             rows={3}
-            name="reply"
+            name="content"
             placeholder="Add comment..."
           />
         </Grid>

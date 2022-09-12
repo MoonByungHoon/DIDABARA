@@ -9,8 +9,8 @@ import SubscriptionList from "../components/SubscriptionList";
 import DropBox from "../components/DropBox";
 import axios from "axios";
 import { getDidabara, REQUEST_ADDRESS } from "../config/APIs";
-import { didabaraItemState, didabaraState } from "../config/Atom";
-import { useRecoilState } from "recoil";
+import { didabaraState } from "../config/Atom";
+import { useSetRecoilState } from "recoil";
 import { useQuery } from "react-query";
 
 const StyledButton = styled(Button)`
@@ -77,8 +77,7 @@ function DashBoard() {
   const [makeCategory, setMakeCategory] = useState(false);
   const [showList, setShowList] = useState(true);
   const [invite, setInvite] = useState(false);
-  const [didabara, setDidabara] = useRecoilState(didabaraState);
-  const [didabaraItems, setDidabaraItems] = useRecoilState(didabaraItemState);
+  const setDidabara = useSetRecoilState(didabaraState);
 
   const { isLoading } = useQuery("didabara", getDidabara, {
     refetchOnWindowFocus: false,
@@ -86,21 +85,6 @@ function DashBoard() {
     onSuccess: (data) => {
       setDidabara((prev) => {
         return { ...prev, create: data.data };
-      });
-      data.data.map((item) => {
-        axios
-          .get(REQUEST_ADDRESS + `categoryItem/list/${item.id}`, {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-          })
-          .then((res) => {
-            console.log(res.data);
-            setDidabaraItems((befroe) => {
-              return [...befroe, ...res.data.resList];
-            });
-          })
-          .catch((err) => console.log(err));
       });
     },
   });
@@ -112,6 +96,16 @@ function DashBoard() {
     if (e.target.value === "joinList") {
       setShowList(false);
     }
+  };
+
+  const fetche = () => {
+    axios
+      .get(REQUEST_ADDRESS + "categoryItem/myitemlist", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => console.log(res));
   };
 
   return (
@@ -159,8 +153,13 @@ function DashBoard() {
         {makeCategory && <CreateModal setShowing={setMakeCategory} />}
         {invite && <InviteInput setInvite={setInvite} />}
         {/* <Outlet /> */}
-        {showList ? <DocumentList loading={isLoading} /> : <SubscriptionList loading={isLoading}/>}
+        {showList ? (
+          <DocumentList loading={isLoading} />
+        ) : (
+          <SubscriptionList loading={isLoading} />
+        )}
       </SecondGrid>
+      <button onClick={fetche}>받아오셈</button>
     </Container>
   );
 }

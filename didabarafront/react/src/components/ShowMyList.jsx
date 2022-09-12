@@ -1,7 +1,9 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
+import { useQuery } from "react-query";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { didabaraState } from "../config/Atom";
+import { getDidabaraItems } from "../config/APIs";
+import { didabaraItemState, didabaraState } from "../config/Atom";
 import MyList from "./MyList";
 
 const StyledGrid = styled.div`
@@ -24,6 +26,15 @@ const StyledGrid = styled.div`
 
 function ShowMyList() {
   const didabara = useRecoilValue(didabaraState);
+  const setDidabaraItems = useSetRecoilState(didabaraItemState);
+
+  const { isLoading } = useQuery("getDidabiarItems", getDidabaraItems, {
+    refetchOnWindowFocus: false,
+    retry: false,
+    onSuccess: (data) => {
+      setDidabaraItems([...data.data.resList]);
+    },
+  });
 
   return (
     <StyledGrid>
@@ -35,8 +46,6 @@ function ShowMyList() {
               content={list.content}
               imgSrc={list.profileImageUrl}
               id={list.id}
-              code={list.inviteCode}
-              host={list.host}
             />
           ))
         : null}

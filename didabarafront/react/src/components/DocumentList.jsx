@@ -172,12 +172,217 @@ const AddItembutton = styled.button`
   }
 `;
 
+// function DocumentList({ loading }) {
+//   const setMenu = useSetRecoilState(menuState);
+//   const filteredList = useRecoilValue(didabaraSelector);
+//   const [didabara, setDidabara] = useRecoilState(didabaraState);
+//   const [makeItem, setMakeItem] = useState();
+//   const [path, setPath] = useState(null);
+//   const indicatorRef = useRef();
+//   const messageRef = useRef();
+//   const codeRef = useRef();
+//   const itemRef = useRef();
+//   const navi = useNavigate();
+//   const param = useParams();
+
+//   const hasInvite = didabara?.create?.find((list) => {
+//     return list.id == param.document;
+//   });
+
+//   const code = hasInvite?.inviteCode;
+
+//   /**
+//    *
+//    * @param {mouseClick} e.target 윈도우 대화창에서 boolean 값을 받아
+//    * true 면 해당 커뮤니티 삭제.
+//    */
+//   const deleteCategory = (e) => {
+//     const yesOrNo = window.confirm("해당 커뮤니티를 삭제 하시겠습니까??");
+
+//     if (yesOrNo) {
+//       axios
+//         .delete(REQUEST_ADDRESS + `category/delete/page/${param.document}`, {
+//           headers: {
+//             Authorization: "Bearer " + localStorage.getItem("token"),
+//           },
+//         })
+//         .then((res) => {
+//           navi("/dashboard");
+//           setDidabara((prev) => {
+//             return { ...prev, create: [...res.data.resList] };
+//           });
+//         })
+//         .catch((err) => console.log(err));
+//     }
+//   };
+//   /**
+//    *
+//    * @param {mouseClick} e 메뉴에서 Copy InviteCode 클릭시 인바이트코드 복사
+//    */
+//   const copyInviteCode = (e) => {
+//     codeRef.current.select();
+//     document.execCommand("copy");
+
+//     messageRef.current.classList.remove("BOX");
+
+//     setTimeout(() => {
+//       messageRef.current.classList.add("BOX");
+//     }, 3000);
+//   };
+
+//   /**
+//    * alert 창 닫기버튼. 누르지않아도 3초뒤 자동으로 닫히지만
+//    * 유저가 직접 닫을 수 있게 버튼 추가.
+//    */
+//   const hideAlert = () => {
+//     messageRef.current.classList.add("BOX");
+//   };
+
+//   /**
+//    *
+//    * @param {} e 상단 메뉴바 클릭시 메뉴바 이름으로
+//    * 로딩해올 다큐먼트 종류를 결정함.
+//    *
+//    * + 인디케이터 에니메이션
+//    */
+//   const handleMenuState = (e) => {
+//     setMenu(e.target.innerText);
+//     indicatorRef.current.style.left = e.target.offsetLeft + "px";
+//     indicatorRef.current.style.width = e.target.offsetWidth + "px";
+//   };
+
+//   /**
+//    * 아이템 생성 대화창 표시.
+//    * 기본값은 none 이고, 클릭시 block 으로 바뀌어 화면에 표시된다.
+//    */
+//   const openItemCreationBox = () => {
+//     itemRef.current.style.display = "block";
+//   };
+
+//   /**
+//    *
+//    * @param {*} e 점버튼 클릭시 해당 아이템의 메뉴를 출력.
+//    * 수정과 삭제 가능.
+//    */
+//   const menuOpen = (e) => {
+//     e.target.nextSibling.classList.toggle("show");
+//     e.target.nextSibling.focus();
+//   };
+//   /**
+//    *
+//    * @param {*} e 메뉴바 오픈 상태에서 다른요소 클릭시
+//    * 메뉴바가 닫히도록 함.
+//    * 타임아웃 없이는 요소가 바로 none으로 되므로 요소안에 위치한 기능접근에 제한이 있음.
+//    */
+//   const onBlur = (e) => {
+//     setTimeout(() => {
+//       e.target.classList.toggle("show");
+//     }, 1000);
+//   };
+//   return (
+//     <>
+//       {loading ? (
+//         <Skeleton />
+//       ) : (
+//         <>
+//           <Container>
+//             <MenuBar>
+//               <List onClick={handleMenuState}>
+//                 <Item>Listing</Item>
+//                 <Item>Out Dated</Item>
+//                 <Item>All List</Item>
+//               </List>
+//               <List>
+//                 <Item>Members</Item>
+//                 <Item onClick={copyInviteCode}>Copy InviteCode</Item>
+//                 <Item>수정</Item>
+//               </List>
+
+//               <Indicator ref={indicatorRef}> </Indicator>
+
+//               <Alert className="BOX" ref={messageRef}>
+//                 초대 코드가 복사되었습니다.
+//                 <button onClick={hideAlert}>X</button>
+//               </Alert>
+//               <input
+//                 type="text"
+//                 value={code}
+//                 readOnly
+//                 ref={codeRef}
+//                 style={{ left: "-5000px", position: "absolute" }}
+//               />
+//               <DeleteButton onClick={deleteCategory}>삭제</DeleteButton>
+//             </MenuBar>
+//             <ListConatainer>
+//               {filteredList ? (
+//                 filteredList.map((item, idx) => {
+//                   // if (item.category == param.document)
+//                   return (
+//                     <PDF key={idx}>
+//                       <img
+//                         src={item.preview}
+//                         onClick={() => {
+//                           setPath(item.itemPath);
+//                         }}
+//                       />
+
+//                       <div>
+//                         <h4
+//                           onClick={() => {
+//                             setPath(item.itemPath);
+//                           }}
+//                         >
+//                           {item.title}
+//                         </h4>
+//                         <span
+//                           onClick={() => {
+//                             setPath(item.itemPath);
+//                           }}
+//                         >
+//                           {item.content}
+//                         </span>
+//                       </div>
+//                       <DotButtonBox>
+//                         <ItemMenuButton onClick={menuOpen}>...</ItemMenuButton>
+//                         <HiddenMenu tabIndex={1} onBlur={onBlur}>
+//                           <ItemMenu id={item.id} category={item.category} />
+//                         </HiddenMenu>
+//                       </DotButtonBox>
+//                     </PDF>
+//                   );
+//                 })
+//               ) : (
+//                 <Nullbox>
+//                   <Nullsign>게시된 글이 존재하지 않습니다.</Nullsign>
+
+//                   <h4 onClick={openItemCreationBox}>작성하기</h4>
+//                 </Nullbox>
+//               )}
+//               <AddItembutton onClick={openItemCreationBox}>+</AddItembutton>
+//               {makeItem && <CreateItem setCreateItem={setMakeItem} />}
+//             </ListConatainer>
+//           </Container>
+
+//           {path && (
+//             <ViewContainer setPath={setPath}>
+//               {/* <Viewer path={path} /> */}
+//             </ViewContainer>
+//           )}
+//         </>
+//       )}
+//       <div ref={itemRef} style={{ display: "none" }}>
+//         <CreateItem control={itemRef} id={param.document} />
+//       </div>
+//     </>
+//   );
+// }
+// export default DocumentList;
+
 function DocumentList({ loading }) {
   const setMenu = useSetRecoilState(menuState);
   const filteredList = useRecoilValue(didabaraSelector);
   const [didabara, setDidabara] = useRecoilState(didabaraState);
   const [makeItem, setMakeItem] = useState();
-  const [path, setPath] = useState(null);
   const indicatorRef = useRef();
   const messageRef = useRef();
   const codeRef = useRef();
@@ -214,6 +419,16 @@ function DocumentList({ loading }) {
         })
         .catch((err) => console.log(err));
     }
+  };
+
+  const printGuestList = () => {
+    axios
+      .get(REQUEST_ADDRESS + `subscriber/list/${param.document}`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => console.log(res));
   };
   /**
    *
@@ -277,7 +492,7 @@ function DocumentList({ loading }) {
   const onBlur = (e) => {
     setTimeout(() => {
       e.target.classList.toggle("show");
-    }, 500);
+    }, 1000);
   };
   return (
     <>
@@ -293,7 +508,7 @@ function DocumentList({ loading }) {
                 <Item>All List</Item>
               </List>
               <List>
-                <Item>Members</Item>
+                <Item onClick={printGuestList}>Members</Item>
                 <Item onClick={copyInviteCode}>Copy InviteCode</Item>
                 <Item>수정</Item>
               </List>
@@ -316,27 +531,32 @@ function DocumentList({ loading }) {
             <ListConatainer>
               {filteredList ? (
                 filteredList.map((item, idx) => {
-                  // if (item.category == param.document)
                   return (
                     <PDF key={idx}>
                       <img
                         src={item.preview}
                         onClick={() => {
-                          setPath(item.itemPath);
+                          navi(`/dashboard/pages/${item.id}`, {
+                            state: { item: item },
+                          });
                         }}
                       />
 
                       <div>
                         <h4
                           onClick={() => {
-                            setPath(item.itemPath);
+                            navi(`/dashboard/pages/${item.id}`, {
+                              state: { item: item },
+                            });
                           }}
                         >
                           {item.title}
                         </h4>
                         <span
                           onClick={() => {
-                            setPath(item.itemPath);
+                            navi(`/dashboard/pages/${item.id}`, {
+                              state: { item: item },
+                            });
                           }}
                         >
                           {item.content}
@@ -345,7 +565,7 @@ function DocumentList({ loading }) {
                       <DotButtonBox>
                         <ItemMenuButton onClick={menuOpen}>...</ItemMenuButton>
                         <HiddenMenu tabIndex={1} onBlur={onBlur}>
-                          <ItemMenu id={item.id} />
+                          <ItemMenu id={item.id} category={item.category} />
                         </HiddenMenu>
                       </DotButtonBox>
                     </PDF>
@@ -362,12 +582,6 @@ function DocumentList({ loading }) {
               {makeItem && <CreateItem setCreateItem={setMakeItem} />}
             </ListConatainer>
           </Container>
-
-          {path && (
-            <ViewContainer setPath={setPath}>
-              {/* <Viewer path={path} /> */}
-            </ViewContainer>
-          )}
         </>
       )}
       <div ref={itemRef} style={{ display: "none" }}>

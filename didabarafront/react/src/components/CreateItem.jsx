@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { REQUEST_ADDRESS } from "../config/APIs";
-import { categoryItem } from "../config/Atom";
+import { categoryItem, didabaraItemState } from "../config/Atom";
 import ModalPopUp from "./ModalPopUp";
 
 const Container = styled.div`
@@ -71,6 +71,7 @@ const Text = styled.span`
 
 function CreateItem({ id, control }) {
   const setCategoryItem = useSetRecoilState(categoryItem);
+  const setDidabaraItem = useSetRecoilState(didabaraItemState);
   const formRef = useRef();
 
   // useEffect(()=>{
@@ -110,7 +111,7 @@ function CreateItem({ id, control }) {
       .then((res) => {
         console.log(res);
         eraiseInfomation();
-        setCategoryItem(res.data.resList);
+        setDidabaraItem(res.data.resList);
       })
       .catch((err) => {
         eraiseInfomation();

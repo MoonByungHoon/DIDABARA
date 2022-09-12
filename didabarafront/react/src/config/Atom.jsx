@@ -13,10 +13,7 @@ export const loginState = atom({
   key: "loginState",
   default: false,
 });
-export const myDocumentState = atom({
-  key: "documentState",
-  default: [{ id: 1 }],
-});
+
 export const menuState = atom({
   key: "menuState",
   default: "Listing",
@@ -36,11 +33,6 @@ export const didabaraState = atom({
     create: [{}],
     join: [{}],
   },
-});
-
-export const myJoinState = atom({
-  key: "myJoinState",
-  default: [{ id: 1 }],
 });
 
 export const categoryItem = atom({
@@ -63,6 +55,7 @@ export const didabaraSelector = selector({
           const listing = matchedItems.filter(
             (item) => Date.parse(item.expiredDate) > Date.now()
           );
+
           return listing.length ? listing : null;
         } else {
           return null;
