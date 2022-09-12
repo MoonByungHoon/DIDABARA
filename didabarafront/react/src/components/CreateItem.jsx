@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { REQUEST_ADDRESS } from "../config/APIs";
@@ -84,7 +84,7 @@ function CreateItem({ id, control }) {
   };
   const sendCreateRequest = (e) => {
     e.preventDefault();
-    console.dir(formRef.current.expiredDate);
+    console.log("아이디", id);
     const originalData = new FormData(e.target);
     const REQUESTDATA = new FormData();
 

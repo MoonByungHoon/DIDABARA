@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "../config/Atom";
 import ClearIcon from "@mui/icons-material/Clear";

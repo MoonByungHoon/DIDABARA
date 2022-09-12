@@ -1,9 +1,7 @@
 import React from "react";
-import { useQuery } from "react-query";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { getMyList } from "../config/APIs";
-import { myDocumentState } from "../config/Atom";
+import { didabaraState } from "../config/Atom";
 import MyList from "./MyList";
 
 const StyledGrid = styled.div`
@@ -25,22 +23,12 @@ const StyledGrid = styled.div`
 `;
 
 function ShowMyList() {
-  const [myDocumentList, setList] = useRecoilState(myDocumentState);
-
-  const { isLoading } = useQuery("myDocumentList", getMyList, {
-    refetchOnWindowFocus: false,
-    retry: 0,
-    onSuccess: (data) => {
-      console.log("myDocumentList is....:", data);
-      setList(data.data);
-    },
-  });
+  const didabara = useRecoilValue(didabaraState);
 
   return (
     <StyledGrid>
-      {isLoading
-        ? null
-        : myDocumentList.map((list) => (
+      {didabara?.create
+        ? didabara.create.map((list) => (
             <MyList
               key={list.id}
               title={list.title}
@@ -50,7 +38,8 @@ function ShowMyList() {
               code={list.inviteCode}
               host={list.host}
             />
-          ))}
+          ))
+        : null}
     </StyledGrid>
   );
 }

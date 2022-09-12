@@ -27,10 +27,7 @@ export const getUserData = () => {
       });
   }
 };
-
-export const getMyList = () => {
-  console.log("getting my create list from server...");
-
+export const getDidabara = () => {
   return axios.get(REQUEST_ADDRESS + "category/myList", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
@@ -38,10 +35,10 @@ export const getMyList = () => {
   });
 };
 
-export const getItemList = (id) => {
-  console.log("item list loading...");
+export const getjoinedList = () => {
+  console.log("getting my Join List...");
 
-  return axios.get(REQUEST_ADDRESS + `categoryItem/list/${id}`, {
+  return axios.get(REQUEST_ADDRESS + "subscriber/myJoinList", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },

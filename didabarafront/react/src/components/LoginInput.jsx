@@ -75,6 +75,10 @@ function LoginInput() {
     window.open(KakaoLoginAPI, "_self");
   };
 
+  const openFindInfo = () => {
+    navi("/find-info");
+  };
+
   /**이벤트 발생 폼으로부터 데이터를 받아
    * 각각 username 과 password 로 할당하여
    * 백엔드 로그인 주소로 보내준다.

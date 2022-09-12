@@ -1,21 +1,14 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { getItemList, REQUEST_ADDRESS } from "../config/APIs";
-import {
-  categoryItem,
-  itemMenuSelector,
-  menuState,
-  myDocumentState,
-  userState,
-} from "../config/Atom";
+import { REQUEST_ADDRESS } from "../config/APIs";
+import { didabaraSelector, didabaraState, menuState } from "../config/Atom";
 import CreateItem from "./CreateItem";
-import FolderCopyOutlinedIcon from "@mui/icons-material/FolderCopyOutlined";
 import ItemMenu from "./ItemMenu";
-import { useQuery } from "react-query";
 import ViewContainer from "./ViewContainer";
+import Skeleton from "../items/Skeleton";
 
 const Container = styled.div`
   width: 100% - 40px;
@@ -36,6 +29,11 @@ const PDF = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  img {
+    width: 200px;
+    cursor: pointer;
+  }
 
   div {
     width: 100%;
@@ -64,6 +62,7 @@ const PDF = styled.div`
   }
 `;
 const MenuBar = styled.div`
+  position: relative;
   width: 100%;
   display: flex;
   align-items: center;
@@ -86,7 +85,7 @@ const Indicator = styled.span`
   border-radius: 3px;
   background-color: #1976d2;
   position: absolute;
-  bottom: -5px;
+  bottom: 0px;
   transition: 0.3s;
 `;
 const Nullbox = styled.div`
@@ -173,31 +172,25 @@ const AddItembutton = styled.button`
   }
 `;
 
-function DocumentList() {
-  const user = useRecoilValue(userState);
+function DocumentList({ loading }) {
   const setMenu = useSetRecoilState(menuState);
-  const setCategoryItems = useSetRecoilState(categoryItem);
-  const setMyDocumentState = useSetRecoilState(myDocumentState);
-  const filteredList = useRecoilValue(itemMenuSelector);
+  const filteredList = useRecoilValue(didabaraSelector);
+  const [didabara, setDidabara] = useRecoilState(didabaraState);
   const [makeItem, setMakeItem] = useState();
   const [path, setPath] = useState(null);
   const indicatorRef = useRef();
   const messageRef = useRef();
   const codeRef = useRef();
   const itemRef = useRef();
-  const location = useLocation();
   const navi = useNavigate();
   const param = useParams();
 
-  const { isLoading } = useQuery(
-    "ItemList",
-    () => getItemList(param.document),
-    {
-      refetchOnWindowFocus: false,
-      retry: 0,
-      onSuccess: (data) => setCategoryItems(data.data.resList),
-    }
-  );
+  const hasInvite = didabara?.create?.find((list) => {
+    return list.id == param.document;
+  });
+
+  const code = hasInvite?.inviteCode;
+
   /**
    *
    * @param {mouseClick} e.target 윈도우 대화창에서 boolean 값을 받아
@@ -215,7 +208,9 @@ function DocumentList() {
         })
         .then((res) => {
           navi("/dashboard");
-          setMyDocumentState(res.data.resList);
+          setDidabara((prev) => {
+            return { ...prev, create: [...res.data.resList] };
+          });
         })
         .catch((err) => console.log(err));
     }
@@ -282,13 +277,12 @@ function DocumentList() {
   const onBlur = (e) => {
     setTimeout(() => {
       e.target.classList.toggle("show");
-    }, 100);
+    }, 500);
   };
-  console.log(path);
   return (
     <>
-      {isLoading ? (
-        "loading......"
+      {loading ? (
+        <Skeleton />
       ) : (
         <>
           <Container>
@@ -300,13 +294,8 @@ function DocumentList() {
               </List>
               <List>
                 <Item>Members</Item>
-                {location.state.host === user.id && (
-                  <>
-                    <Item onClick={copyInviteCode}>Copy InviteCode</Item>
-
-                    <Item>수정</Item>
-                  </>
-                )}
+                <Item onClick={copyInviteCode}>Copy InviteCode</Item>
+                <Item>수정</Item>
               </List>
 
               <Indicator ref={indicatorRef}> </Indicator>
@@ -317,7 +306,7 @@ function DocumentList() {
               </Alert>
               <input
                 type="text"
-                value={location.state.inviteCode}
+                value={code}
                 readOnly
                 ref={codeRef}
                 style={{ left: "-5000px", position: "absolute" }}
@@ -326,19 +315,17 @@ function DocumentList() {
             </MenuBar>
             <ListConatainer>
               {filteredList ? (
-                filteredList?.map((item) => {
+                filteredList.map((item, idx) => {
+                  // if (item.category == param.document)
                   return (
-                    <PDF key={item.id}>
-                      <FolderCopyOutlinedIcon
-                        style={{
-                          fontSize: "5rem",
-                          color: "#2F3640",
-                          cursor: "pointer",
-                        }}
+                    <PDF key={idx}>
+                      <img
+                        src={item.preview}
                         onClick={() => {
                           setPath(item.itemPath);
                         }}
                       />
+
                       <div>
                         <h4
                           onClick={() => {
@@ -367,18 +354,15 @@ function DocumentList() {
               ) : (
                 <Nullbox>
                   <Nullsign>게시된 글이 존재하지 않습니다.</Nullsign>
-                  {location.state.host === user.id && (
-                    <h4 onClick={openItemCreationBox}>작성하기</h4>
-                  )}
+
+                  <h4 onClick={openItemCreationBox}>작성하기</h4>
                 </Nullbox>
               )}
               <AddItembutton onClick={openItemCreationBox}>+</AddItembutton>
               {makeItem && <CreateItem setCreateItem={setMakeItem} />}
             </ListConatainer>
           </Container>
-          <div ref={itemRef} style={{ display: "none" }}>
-            <CreateItem control={itemRef} id={param.document} />
-          </div>
+
           {path && (
             <ViewContainer setPath={setPath}>
               {/* <Viewer path={path} /> */}
@@ -386,6 +370,9 @@ function DocumentList() {
           )}
         </>
       )}
+      <div ref={itemRef} style={{ display: "none" }}>
+        <CreateItem control={itemRef} id={param.document} />
+      </div>
     </>
   );
 }

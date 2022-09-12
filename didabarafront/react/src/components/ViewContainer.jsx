@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { itemMenuSelector } from "../config/Atom";
+import { didabaraSelector } from "../config/Atom";
 import ReplyContents from "./ReplyContents";
 import ReplyInput from "./ReplyInput";
 import Viewer from "./Viewer";
@@ -35,13 +35,11 @@ const Layout = styled.div`
 `;
 
 function ViewContainer({ setPath }) {
-  const documentList = useRecoilValue(itemMenuSelector);
+  const documentList = useRecoilValue(didabaraSelector);
   const [index, setIndex] = useState(0);
 
   const address = documentList[index].itemPath;
-  const goNext = () => {
-    setIndex((prev) => prev + 1);
-  };
+
   console.log(documentList);
   return (
     <Grid>
@@ -53,7 +51,6 @@ function ViewContainer({ setPath }) {
         >
           나가기!
         </button>
-        <button onClick={goNext}>앞에꺼!</button>
       </Layout>
       <Document>
         <Viewer path={address} />

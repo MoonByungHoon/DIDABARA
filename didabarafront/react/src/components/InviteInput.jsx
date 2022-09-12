@@ -1,6 +1,10 @@
 import React, { useRef } from "react";
 import ModalPopUp from "./ModalPopUp";
 import styled from "styled-components";
+import axios from "axios";
+import { REQUEST_ADDRESS } from "../config/APIs";
+import { useSetRecoilState } from "recoil";
+import { didabaraState } from "../config/Atom";
 
 const Container = styled.div`
   width: 100%;
@@ -63,13 +67,31 @@ const CloseButton = styled.button`
 `;
 function InviteInput({ setInvite }) {
   const inputRef = useRef();
+  const setDidabara = useSetRecoilState(didabaraState);
 
   const closeWindow = () => {
     setInvite(false);
   };
 
   const handleInvite = () => {
-    console.log(inputRef.current.value);
+    axios
+      .post(
+        REQUEST_ADDRESS + "subscriber/create",
+        { inviteCode: inputRef.current.value },
+        // categoryDTO,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        setDidabara((prev) => {
+          return { ...prev, join: [...res.data] };
+        });
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <ModalPopUp width={"50%"} height={"20%"}>
