@@ -35,7 +35,7 @@ const StyledText = styled(TextField)({
   },
 });
 
-function ReplyInput({ item }) {
+function ReplyInput({ item, setReply }) {
   const replyRequest = (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
@@ -43,14 +43,17 @@ function ReplyInput({ item }) {
     axios
       .post(
         REQUEST_ADDRESS + `categoryItemReply/create/page/${item}`,
-        { content: data.get("content") },
+        data.get("content"),
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       )
-      .then((res) => console.log(res));
+      .then((res) => {
+        console.log(res);
+        setReply(res.data.resList);
+      });
   };
 
   return (

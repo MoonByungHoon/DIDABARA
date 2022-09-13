@@ -31,6 +31,7 @@ const Reply = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow-y: scroll;
   overflow: hidden;
 `;
 const Layout = styled.div`
@@ -56,11 +57,29 @@ const Box = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const ReplyWrapper = styled.div`
+  overflow-y: scroll;
+`;
 
 function ViewContainer() {
   const navi = useNavigate();
   const location = useLocation();
   const item = location.state.item;
+
+  const [replyList, setReplyList] = useState([]);
+  //로직 작성 해야함
+  // const deleteReply = () => {
+  //   axios.delete(REQUEST_ADDRESS + `categoryItemReply/delete/${""}`);
+  // };
+
+  const { isLoading } = useQuery("reply", () => getItemReply(item.id), {
+    refetchOnWindowFocus: false,
+    retry: false,
+    onSuccess: (data) => {
+      console.log("이페이지의 리플라이:", data.data.resList);
+      setReplyList(data.data.resList);
+    },
+  });
 
   //로직 작성 해야함
   // const deleteReply = () => {
@@ -88,11 +107,15 @@ function ViewContainer() {
       </Document>
 
       <Reply>
-        <div style={{ height: "100%" }}>
-          <ReplyContents item={item.id} />
-        </div>
+        <ReplyWrapper>
+          {isLoading
+            ? "Loading T.T..."
+            : replyList.map((reply) => {
+                return <ReplyContents reply={reply} />;
+              })}
+        </ReplyWrapper>
 
-        <ReplyInput item={item.id} />
+        <ReplyInput item={item.id} setReply={setReplyList} />
       </Reply>
     </Grid>
   );

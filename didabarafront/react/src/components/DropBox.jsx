@@ -45,7 +45,7 @@ function DropBox() {
     "loading..."
   ) : (
     <Area>
-      {didabaraJoin?.join.map((list, idx) => (
+      {didabaraJoin?.join.map((list) => (
         <Profile
           key={list.id}
           img={list.categoryProfileImageUrl}

@@ -1,8 +1,8 @@
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import React, { useState } from "react";
-import { useQuery } from "react-query";
+import axios from "axios";
+import React from "react";
 import styled from "styled-components";
-import { getItemReply } from "../config/APIs";
+import { REQUEST_ADDRESS } from "../config/APIs";
 
 const ReplyBox = styled.div`
   padding: 0px 10px;
@@ -21,47 +21,42 @@ const TextBox = styled.div`
   word-break: break-all;
 `;
 
-function ReplyContents({ item }) {
-  const [replyList, setReplyList] = useState([]);
-  //로직 작성 해야함
-  // const deleteReply = () => {
-  //   axios.delete(REQUEST_ADDRESS + `categoryItemReply/delete/${""}`);
-  // };
+function ReplyContents({ reply }) {
+  const deleteReply = () => {
+    axios
+      .delete(REQUEST_ADDRESS + `categoryItemReply/delete/${reply.id}`, {
+        headers: {
+          Autorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(reply.id);
+        console.log(res);
+      })
+      .catch((err) => console.log(reply.id));
+  };
 
-  const { isLoading } = useQuery("reply", () => getItemReply(item), {
-    refetchOnWindowFocus: false,
-    retry: false,
-    onSuccess: (data) => {
-      console.log("이페이지의 리플라이:", data.data.resList);
-      setReplyList(data.data.resList);
-    },
-  });
-
-  return isLoading
-    ? "Loading T.T..."
-    : replyList?.map((reply) => {
-        return (
-          <ReplyBox>
-            <Wrapper>
-              <WriterAndDate>
-                <h5 style={{ lineHeight: "50%" }}>{reply.writer}</h5>
-                <p style={{ justifySelf: "end" }}>{reply.date}</p>
-                <DeleteForeverOutlinedIcon
-                  style={{
-                    justifySelf: "end",
-                    alignSelf: "center",
-                    cursor: "pointer",
-                  }}
-                  // onClick={deleteReply}
-                />
-              </WriterAndDate>
-              <TextBox>
-                <p style={{ lineHeight: "100%" }}>{reply.content}</p>
-              </TextBox>
-            </Wrapper>
-          </ReplyBox>
-        );
-      });
+  return (
+    <ReplyBox>
+      <Wrapper>
+        <WriterAndDate>
+          <h5 style={{ lineHeight: "50%" }}>{reply.writer}</h5>
+          <p style={{ justifySelf: "end" }}>{reply.date}</p>
+          <DeleteForeverOutlinedIcon
+            style={{
+              justifySelf: "end",
+              alignSelf: "center",
+              cursor: "pointer",
+            }}
+            onClick={deleteReply}
+          />
+        </WriterAndDate>
+        <TextBox>
+          <p style={{ lineHeight: "100%" }}>{reply.content}</p>
+        </TextBox>
+      </Wrapper>
+    </ReplyBox>
+  );
 }
 
 export default ReplyContents;
