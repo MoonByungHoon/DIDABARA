@@ -1,8 +1,9 @@
 package com.bitcamp221.didabara.controller;
 
 import com.bitcamp221.didabara.dto.CheckedDTO;
-import com.bitcamp221.didabara.model.CheckedEntity;
-import com.bitcamp221.didabara.model.SubscriberEntity;
+import com.bitcamp221.didabara.model.CategoryItemEntity;
+import com.bitcamp221.didabara.model.UserEntity;
+import com.bitcamp221.didabara.service.CategoryService;
 import com.bitcamp221.didabara.service.CheckedService;
 import com.bitcamp221.didabara.util.ChangeType;
 import com.bitcamp221.didabara.util.LogMessage;
@@ -22,30 +23,40 @@ public class CheckedController {
     @Autowired
     private CheckedService checkedService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     //  ---------------------------------------------------
 //  작성자 : 문병훈
 //  메소드 정보 : Check 생성
 //  마지막 수정자 : 문병훈
 //  필요 데이터 : categoryItem(id)
 //  -----------------------------------------------------
-    @PostMapping("/create")
-    public void create(@AuthenticationPrincipal final String userId,
-                       @RequestParam(value = "categoryItemId", required = false) final Long categoryItemId) {
+    @PostMapping("/create/item/{categoryItemId}")
+    public List<UserEntity> create(@AuthenticationPrincipal final String userId,
+                                   @PathVariable(value = "categoryItemId", required = false) final Long categoryItemId) {
         final String message = "checked create";
 
         try {
             log.info(LogMessage.infoJoin(message));
 
-            if (!checkedService.existsByUserId(Long.valueOf(userId)) && userId != null && categoryItemId != null) {
+            if (!checkedService.existsByUserId(Long.valueOf(userId)) && userId != null && categoryItemId != null &&
+                    categoryService.findCategoryItemHost(categoryItemId) != Long.valueOf(userId)) {
                 CheckedDTO checkedDTO = new CheckedDTO(Long.valueOf(userId), categoryItemId);
 
                 log.info(LogMessage.infoComplete(message));
 
-                checkedService.create(CheckedDTO.toEntity(checkedDTO));
+                return checkedService.create(CheckedDTO.toEntity(checkedDTO));
             } else {
-                log.error(LogMessage.errorNull(message));
+                if (userId == null || categoryItemId == null) {
+                    log.error(LogMessage.errorNull(message));
 
-                throw new RuntimeException(LogMessage.errorNull(message));
+                    throw new RuntimeException(LogMessage.errorNull(message));
+                } else {
+                    log.error(LogMessage.errorExist(message));
+
+                    throw new RuntimeException(LogMessage.errorExist(message));
+                }
             }
         } catch (Exception e) {
             log.error(LogMessage.errorJoin(message));
@@ -60,29 +71,29 @@ public class CheckedController {
 //  마지막 수정자 : 문병훈
 //  필요 데이터 : categoryItem(id)
 //  -----------------------------------------------------
-    @DeleteMapping("/delete")
-    public void delete(@AuthenticationPrincipal final String userId,
-                       @RequestParam(value = "categoryItemId", required = false) final Long categoryItemId) {
-        final String message = "checked delete";
-
-        try {
-            log.info(LogMessage.infoJoin(message));
-
-            if (userId != null && categoryItemId != null) {
-                checkedService.delete(categoryItemId);
-
-                log.info(LogMessage.infoComplete(message));
-            } else {
-                log.error(LogMessage.errorNull(message));
-
-                throw new RuntimeException(LogMessage.errorNull(message));
-            }
-        } catch (Exception e) {
-            log.error(LogMessage.errorJoin(message));
-
-            throw new RuntimeException(LogMessage.errorJoin(message));
-        }
-    }
+//  @DeleteMapping("/delete")
+//  public void delete(@AuthenticationPrincipal final String userId,
+//                     @RequestParam(value = "categoryItemId", required = false) final Long categoryItemId) {
+//    final String message = "checked delete";
+//
+//    try {
+//      log.info(LogMessage.infoJoin(message));
+//
+//      if (userId != null && categoryItemId != null) {
+//        checkedService.delete(categoryItemId);
+//
+//        log.info(LogMessage.infoComplete(message));
+//      } else {
+//        log.error(LogMessage.errorNull(message));
+//
+//        throw new RuntimeException(LogMessage.errorNull(message));
+//      }
+//    } catch (Exception e) {
+//      log.error(LogMessage.errorJoin(message));
+//
+//      throw new RuntimeException(LogMessage.errorJoin(message));
+//    }
+//  }
 
     //  ---------------------------------------------------
 //  작성자 : 문병훈
@@ -90,9 +101,9 @@ public class CheckedController {
 //  마지막 수정자 : 문병훈
 //  필요 데이터 : categoryItem(id)
 //  -----------------------------------------------------
-    @GetMapping("/checkUserList")
+    @GetMapping("/list/item/{categoryItemId}")
     public ResponseEntity<?> checkUserList(@AuthenticationPrincipal final String userId,
-                                           @RequestParam(value = "categoryItemId", required = false) final Long categoryItemId) {
+                                           @PathVariable(value = "categoryItemId", required = false) final Long categoryItemId) {
         final String message = "checked checkUserList";
 
         try {
@@ -101,9 +112,9 @@ public class CheckedController {
             if (userId != null && categoryItemId != null) {
                 log.info(LogMessage.infoComplete(message));
 
-                List<CheckedEntity> checkedEntities = checkedService.findCheckUserList(categoryItemId);
+                List<UserEntity> list = checkedService.checkUserList(categoryItemId);
 
-                return ChangeType.toCheckedDTO(checkedEntities);
+                return ChangeType.toCheckedDTO(list);
             } else {
                 log.error(LogMessage.errorJoin(message));
 
@@ -123,7 +134,7 @@ public class CheckedController {
 //  마지막 수정자 : 문병훈
 //  필요 데이터 : categoryItem(id)
 //  -----------------------------------------------------
-    @GetMapping("/unCheckUserList")
+    @GetMapping("/un-checkuserlist")
     public ResponseEntity<?> unCheckUserList(@AuthenticationPrincipal final String userId,
                                              @RequestParam(value = "categoryItemId", required = false) final Long categoryItemId) {
         final String message = "checked unCheckUserList";
@@ -133,11 +144,11 @@ public class CheckedController {
 
             if (userId != null && categoryItemId != null) {
 
-                List<SubscriberEntity> checkedEntities = checkedService.findUnCheckUserList(categoryItemId);
+                List<CategoryItemEntity> list = checkedService.findUnCheckUserList(categoryItemId, Long.valueOf(userId));
 
                 log.info(LogMessage.infoComplete(message));
 
-                return ChangeType.toSubscriberDTO(checkedEntities);
+                return ChangeType.toCategoryItemDTO(list);
             } else {
                 log.error(LogMessage.errorNull(message));
 
@@ -155,19 +166,21 @@ public class CheckedController {
 //  메소드 정보 : 나의 Check 리스트 출력
 //  마지막 수정자 : 문병훈
 //  -----------------------------------------------------
-    @GetMapping("/myCheckList")
+    @GetMapping("/my-checklist")
     public ResponseEntity<?> MyCheckList(@AuthenticationPrincipal final String userId) {
         final String message = "checked MyCheckList";
 
         try {
             log.info(LogMessage.infoJoin(message));
 
+            //카테고리 아이디, 카테 아이템 타이틀, 카테 아이템 썸네일
+
             if (userId != null) {
-                List<CheckedEntity> checkedEntities = checkedService.findMyCheckList(Long.valueOf(userId));
+                List<CategoryItemEntity> list = checkedService.findMyCheckList(Long.valueOf(userId));
 
                 log.info(LogMessage.infoComplete(message));
 
-                return ChangeType.toCheckedDTO(checkedEntities);
+                return ChangeType.toCategoryItemDTO(list);
             } else {
                 log.error(LogMessage.errorNull(message));
 
@@ -185,7 +198,7 @@ public class CheckedController {
 //  메소드 정보 : 나의 unCheck 리스트 출력
 //  마지막 수정자 : 문병훈
 //  -----------------------------------------------------
-    @GetMapping("/myUnCheckList")
+    @GetMapping("/my-un-checklist")
     public ResponseEntity<?> myUnCheckList(@AuthenticationPrincipal final String userId) {
         final String message = "checked unMyCheckList";
 
@@ -193,11 +206,11 @@ public class CheckedController {
             log.info(LogMessage.infoJoin(message));
 
             if (userId != null) {
-                List<CheckedEntity> checkedEntities = checkedService.findMyUnCheckList(Long.valueOf(userId));
+                List<UserEntity> list = checkedService.findMyUnCheckList(Long.valueOf(userId));
 
                 log.info(LogMessage.infoComplete(message));
 
-                return ChangeType.toCheckedDTO(checkedEntities);
+                return ChangeType.toCheckedDTO(list);
             } else {
                 log.info(LogMessage.errorNull(message));
 

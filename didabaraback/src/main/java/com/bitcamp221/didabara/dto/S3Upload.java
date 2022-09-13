@@ -6,9 +6,6 @@ import com.amazonaws.util.IOUtils;
 import com.bitcamp221.didabara.mapper.UserInfoMapper;
 import com.bitcamp221.didabara.model.UserInfoEntity;
 import com.bitcamp221.didabara.presistence.UserInfoRepository;
-import com.documents4j.api.DocumentType;
-import com.documents4j.api.IConverter;
-import com.documents4j.job.LocalConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +64,6 @@ public class S3Upload {
         }*/
 
 
-
     File news = new File(System.getProperty("user.dir") + "/" + UUID.randomUUID() + extension);
     uploadFile.renameTo(news);
     return upload(news, dirName, id);
@@ -76,7 +72,7 @@ public class S3Upload {
   public String upload(File uploadFile, String dirName, String id) {
     String fileName = dirName + "/" + uploadFile.getName();
     String uploadImageURI = putS3(uploadFile, fileName);
-    String dBPathName = uploadImageURI.substring(0, 62);
+    String dBPathName = uploadImageURI.substring(0, 56);
     String extensionName = uploadImageURI.substring(uploadImageURI.lastIndexOf("/") + 1);
     String dbFilename = uploadImageURI.substring(uploadImageURI.lastIndexOf("/") + 1);
 
@@ -149,16 +145,16 @@ public class S3Upload {
       byte[] bytes = IOUtils.toByteArray(objectInputStream);
 
       String fileName = null;
-      if(downloadFileName != null) {
+      if (downloadFileName != null) {
         //fileName= URLEncoder.encode(downloadFileName, "UTF-8").replaceAll("\\+", "%20");
-        fileName=  getEncodedFilename(request, downloadFileName);
+        fileName = getEncodedFilename(request, downloadFileName);
       } else {
-        fileName=  getEncodedFilename(request, fileKey); // URLEncoder.encode(fileKey, "UTF-8").replaceAll("\\+", "%20");
+        fileName = getEncodedFilename(request, fileKey); // URLEncoder.encode(fileKey, "UTF-8").replaceAll("\\+", "%20");
       }
 
       response.setContentType("application/octet-stream;charset=UTF-8");
       response.setHeader("Content-Transfer-Encoding", "binary");
-      response.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\";" );
+      response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\";");
       response.setHeader("Content-Length", String.valueOf(fullObject.getObjectMetadata().getContentLength()));
       response.setHeader("Set-Cookie", "fileDownload=true; path=/");
       FileCopyUtils.copy(bytes, response.getOutputStream());

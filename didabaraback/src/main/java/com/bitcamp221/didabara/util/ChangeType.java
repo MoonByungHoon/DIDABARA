@@ -6,12 +6,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class ChangeType {
 
+    public static ResponseEntity toUserDTO(final List<UserEntity> entities) {
+        final List<UserDTO> userDTOS = entities
+                .stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
+
+        final ResponseDTO<UserDTO> responseDTO = ResponseDTO
+                .<UserDTO>builder()
+                .resList(userDTOS)
+                .build();
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
     public static ResponseEntity toCategoryDTO(final List<CategoryEntity> entities) {
+        final List<CategoryDTO> categoryDTOS = entities
+                .stream()
+                .map(CategoryDTO::new)
+                .collect(Collectors.toList());
+
+        final ResponseDTO<CategoryDTO> responseDTO = ResponseDTO
+                .<CategoryDTO>builder()
+                .resList(categoryDTOS)
+                .build();
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    public static ResponseEntity toCategoryDTO(final Optional<CategoryEntity> entities) {
         final List<CategoryDTO> categoryDTOS = entities
                 .stream()
                 .map(CategoryDTO::new)
@@ -81,15 +110,15 @@ public class ChangeType {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    public static ResponseEntity toCheckedDTO(final List<CheckedEntity> entities) {
-        final List<CheckedDTO> checkedDTOS = entities
+    public static ResponseEntity toCheckedDTO(final List<UserEntity> entities) {
+        final List<UserDTO> userDTOS = entities
                 .stream()
-                .map(CheckedDTO::new)
+                .map(UserDTO::new)
                 .collect(Collectors.toList());
 
-        final ResponseDTO<CheckedDTO> responseDTO = ResponseDTO
-                .<CheckedDTO>builder()
-                .resList(checkedDTOS)
+        final ResponseDTO<UserDTO> responseDTO = ResponseDTO
+                .<UserDTO>builder()
+                .resList(userDTOS)
                 .build();
 
         return ResponseEntity.ok().body(responseDTO);

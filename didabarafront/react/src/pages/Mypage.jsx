@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 function Mypage() {
   const viewHeight = window.outerHeight;
   return (
+    <div>
     <Grid container>
       <Grid
         component="nav"
@@ -25,6 +26,7 @@ function Mypage() {
         <Outlet />
       </Grid>
     </Grid>
+    </div>
   );
 }
 
