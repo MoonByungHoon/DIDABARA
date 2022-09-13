@@ -29,7 +29,7 @@ import { Box } from "@mui/system";
 import axios from "axios";
 import { REQUEST_ADDRESS } from "../config/APIs";
 import { useNavigate } from "react-router-dom";
-import DeleteAccount from "./DeleteAccount";
+import WarningIcon from "@mui/icons-material/Warning";
 
 /** 스타일 컴포넌트 */
 const StyledButton = styled(Button)`
@@ -384,25 +384,42 @@ function PersonalInfo() {
             </StyledGrid2>
           </StyledGrid>
         </StyledPaper>
-        <Paper elevation={3}>
-          <Typography style={{fontFamily: "Share Tech Mono"}}>Delete Account</Typography>
-          <Typography>탈퇴시 모든 카테고리와 문서가 지워집니다.</Typography>
-          <form onSubmit={deleteAccount}>
-            <Input name="password">비밀번호를 입력해주세요</Input>
-            <Input style={{ display: "none" }} />
-            <Button onClick={deleteConfirm}>확인</Button>
-            {deleteAlert && (
-              <Alert
-                action={
-                  <Button type="submit" color="inherit" size="small">
-                    탈퇴하기
-                  </Button>
-                }
-              >
-                정말 삭제하시겠습니까?
-              </Alert>
-            )}
-          </form>
+        <Paper elevation={3} style={{ marginTop: "3%" }}>
+          <Container maxWidth="lg">
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography variant="h5" style={{ color: "#CD201F" }}>
+                  Delete Account
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography>
+                  <WarningIcon fontSize="xs" sx={{ mr: 0.5 }} />
+                  탈퇴시 모든 카테고리와 문서가 지워집니다.
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <form onSubmit={deleteAccount}>
+                  <TextField name="password" label="비밀번호">
+                    비밀번호를 입력해주세요
+                  </TextField>
+                  <Input style={{ display: "none" }} />
+                  <Button onClick={deleteConfirm}>확인</Button>
+                  {deleteAlert && (
+                    <Alert
+                      action={
+                        <Button type="submit" color="inherit" size="small">
+                          탈퇴하기
+                        </Button>
+                      }
+                    >
+                      정말 삭제하시겠습니까?
+                    </Alert>
+                  )}
+                </form>
+              </Grid>
+            </Grid>
+          </Container>
         </Paper>
       </Container>
     </>
